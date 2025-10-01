@@ -1,0 +1,209 @@
+<%- include('partials/header') %>
+<%- include('partials/nav',{ activePage: 'add', isLoggedIn: isLoggedIn }) %>
+
+<div id="top" class="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-indigo-50 flex flex-col items-center px-4 py-6 sm:px-6 lg:px-8 pt-20">
+    <!-- Page Container -->
+    <div class="w-full max-w-4xl bg-white shadow-2xl rounded-3xl p-8 form-animate">
+        <!-- Page Heading -->
+        <section id="add-header" class="text-center mb-10 form-animate">
+            <h1 class="text-4xl font-bold text-gray-800 mb-4">Add New Car</h1>
+            <p class="text-gray-600 text-lg">Register your vehicle with detailed information</p>
+        </section>
+
+        <!-- Error Display -->
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-6">
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span class="font-semibold"><%= error %></span>
+                </div>
+            </div>
+        <% } %>
+
+        <!-- Form Container -->
+        <section id="add-form" class="w-full max-w-2xl mx-auto form-animate">
+            <form enctype="multipart/form-data" action="/add" method="POST" 
+                  class="space-y-6">
+    
+    <!-- Car Name -->
+    <div class="form-animate">
+        <label for="Username" class="block text-gray-700 font-semibold mb-2">Car Name</label>
+        <input 
+            type="text" 
+            name="Username" 
+            id="Username" 
+            placeholder="e.g., Honda Civic, Toyota Camry" 
+            value="<%= typeof oldInput !== 'undefined' && oldInput ? (oldInput.Username || '') : '' %>"
+            required 
+            class="w-full border border-gray-300 text-gray-800 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+        >
+    </div>
+
+    <!-- Engine Number -->
+    <div class="form-animate">
+        <label for="car_no" class="block text-gray-700 font-semibold mb-2">Engine Number</label>
+        <input 
+            type="text" 
+            name="car_no" 
+            id="car_no" 
+            placeholder="e.g., GA 04 X ABCD" 
+            value="<%= typeof oldInput !== 'undefined' && oldInput ? (oldInput.car_no || '') : '' %>" 
+            required 
+            class="w-full border border-gray-300 text-gray-800 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+        >
+    </div>
+
+    <!-- Last PUC Date -->
+    <div class="form-animate">
+        <label for="lastPUC" class="block text-gray-700 font-semibold mb-2">Last PUC Date</label>
+        <input 
+            type="date" 
+            name="lastPUC" 
+            id="lastPUC" 
+            value="<%= typeof oldInput !== 'undefined' && oldInput ? (oldInput.lastPUC || '') : '' %>"
+            required 
+            class="w-full border border-gray-300 text-gray-800 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+        >
+    </div>
+
+    <!-- Last Insurance Date -->
+    <div class="form-animate">
+        <label for="lastInsurance" class="block text-gray-700 font-semibold mb-2">Last Insurance Date</label>
+        <input 
+            type="date" 
+            name="lastInsurance" 
+            id="lastInsurance" 
+            value="<%= typeof oldInput !== 'undefined' && oldInput ? (oldInput.lastInsurance || '') : '' %>"
+            required 
+            class="w-full border border-gray-300 text-gray-800 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+        >
+    </div>
+
+    <!-- Optional Image Upload -->
+    <div class="w-full form-animate">
+        <label for="image" class="block text-gray-700 font-semibold mb-2">Car Image (Optional)</label>
+        <label for="image" 
+               class="w-full flex flex-col items-center px-6 py-8 bg-indigo-50 text-indigo-600 rounded-lg border-2 border-dashed border-indigo-300 cursor-pointer hover:bg-indigo-100 hover:border-indigo-400 transition-all duration-200">
+            <svg class="w-8 h-8 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+            </svg>
+            <span class="text-sm text-center font-medium">Click to upload car image</span>
+            <span class="text-xs text-indigo-400 mt-1">PNG, JPG up to 10MB</span>
+            <input type="file" name="image" id="image" accept="image/*" class="hidden" />
+        </label>
+    </div>
+
+    <!-- Submit Button -->
+    <button 
+        type="submit" 
+        class="w-full bg-indigo-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-indigo-700 transition-all duration-300 transform hover:scale-105 shadow-lg mt-6"
+    >
+        <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+        </svg>
+        Add Car to Collection
+    </button>
+        </form>
+    </section>
+</div>
+</div>
+
+<!-- Enhanced Smooth Scrolling and Animation JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Create and style scroll-to-top button
+        let scrollToTopBtn = document.createElement('button');
+        scrollToTopBtn.innerHTML = '↑';
+        scrollToTopBtn.className = 'scroll-to-top';
+        scrollToTopBtn.setAttribute('aria-label', 'Scroll to top');
+        scrollToTopBtn.onclick = () => {
+            window.scrollTo({ 
+                top: 0, 
+                behavior: 'smooth' 
+            });
+        };
+        document.body.appendChild(scrollToTopBtn);
+
+        // Show/hide scroll to top button based on scroll position
+        function toggleScrollButton() {
+            if (window.pageYOffset > 200) {
+                scrollToTopBtn.classList.add('visible');
+            } else {
+                scrollToTopBtn.classList.remove('visible');
+            }
+        }
+
+        // Throttled scroll listener for better performance
+        let scrollTimeout;
+        window.addEventListener('scroll', function() {
+            if (scrollTimeout) {
+                clearTimeout(scrollTimeout);
+            }
+            scrollTimeout = setTimeout(() => {
+                toggleScrollButton();
+            }, 10);
+        });
+        
+        // Initial check
+        toggleScrollButton();
+
+        // Add smooth scrolling to all anchor links on the page
+        const allAnchorLinks = document.querySelectorAll('a[href^="#"]');
+        allAnchorLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href === '#' || href === '#top') {
+                    e.preventDefault();
+                    window.scrollTo({ 
+                        top: 0, 
+                        behavior: 'smooth' 
+                    });
+                    return;
+                }
+                
+                const targetId = href.substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    e.preventDefault();
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add intersection observer for scroll-triggered animations
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -10% 0px'
+        };
+
+        const elementObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fadeInUp');
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Add animation classes to form elements
+        const formElements = document.querySelectorAll('.form-animate');
+        formElements.forEach((element, index) => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(30px)';
+            element.style.transition = 'all 0.6s ease-out';
+            element.style.transitionDelay = `${index * 0.1}s`;
+            elementObserver.observe(element);
+        });
+
+        // Smooth scroll on page load
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+</script>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,239 @@
+<%- include('partials/header') %>
+<%- include('partials/nav',{ activePage: 'register', isLoggedIn: false }) %>
+
+<div class="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-indigo-50 flex items-center justify-center p-4 pt-20">
+    <!-- Register Container -->
+    <div class="w-full max-w-md">
+        <!-- Logo/Icon Section -->
+        <div class="text-center mb-8">
+            <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
+                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                </svg>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Create Account</h1>
+            <p class="text-gray-600">Join CarCare-Taker today</p>
+        </div>
+
+        <!-- Register Form -->
+        <form method="POST" action="/register" class="bg-white shadow-2xl rounded-3xl p-8 space-y-6 border border-gray-100">
+            
+            <!-- Display validation errors -->
+            <% if (errors && errors.length > 0) { %>
+                <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-4">
+                    <div class="flex items-center mb-2">
+                        <svg class="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span class="font-semibold">Please fix the following errors:</span>
+                    </div>
+                    <ul class="list-disc list-inside space-y-1">
+                        <% errors.forEach(error => { %>
+                            <li class="text-sm"><%= error.msg %></li>
+                        <% }) %>
+                    </ul>
+                </div>
+            <% } %>
+
+            <!-- Username Field -->
+            <div class="space-y-2">
+                <label class="block text-gray-700 font-semibold text-sm">Username</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
+                        </svg>
+                    </div>
+                    <input type="text" name="username" placeholder="Choose a username" 
+                           value="<%= oldInput ? oldInput.username : '' %>"
+                           class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 <%= errors && errors.some(err => err.path === 'username') ? 'border-red-300 bg-red-50' : 'bg-gray-50 hover:bg-white' %>" required />
+                </div>
+            </div>
+
+            <!-- Email Field -->
+            <div class="space-y-2">
+                <label class="block text-gray-700 font-semibold text-sm">Email Address</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <input type="email" name="email" placeholder="Enter your email address" 
+                           value="<%= oldInput ? oldInput.email : '' %>"
+                           class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 <%= errors && errors.some(err => err.path === 'email') ? 'border-red-300 bg-red-50' : 'bg-gray-50 hover:bg-white' %>" required />
+                </div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="space-y-2">
+                <label class="block text-gray-700 font-semibold text-sm">Password</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                    </div>
+                    <input type="password" name="password" id="registerPassword" placeholder="Create a strong password" 
+                           value="<%= oldInput ? oldInput.password : '' %>"
+                           class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 <%= errors && errors.some(err => err.path === 'password') ? 'border-red-300 bg-red-50' : 'bg-gray-50 hover:bg-white' %>" required />
+                    <button type="button" id="toggleRegisterPassword" class="absolute inset-y-0 right-0 pr-4 flex items-center justify-center">
+                        <svg id="eyeOpenRegister" class="w-5 h-5 text-gray-400 hover:text-gray-600 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                        <svg id="eyeClosedRegister" class="w-5 h-5 text-gray-400 hover:text-gray-600 hidden cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Confirm Password Field -->
+            <div class="space-y-2">
+                <label class="block text-gray-700 font-semibold text-sm">Confirm Password</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm your password" 
+                           value="<%= oldInput ? oldInput.confirmPassword : '' %>"
+                           class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 <%= errors && errors.some(err => err.path === 'confirmPassword') ? 'border-red-300 bg-red-50' : 'bg-gray-50 hover:bg-white' %>" required />
+                    <button type="button" id="toggleConfirmPassword" class="absolute inset-y-0 right-0 pr-4 flex items-center justify-center">
+                        <svg id="eyeOpenConfirm" class="w-5 h-5 text-gray-400 hover:text-gray-600 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                        <svg id="eyeClosedConfirm" class="w-5 h-5 text-gray-400 hover:text-gray-600 hidden cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Terms and Conditions -->
+            <div class="flex items-start space-x-3">
+                <input type="checkbox" name="terms" id="terms-checkbox" 
+                       <%= oldInput && oldInput.termsAccepted ? 'checked' : '' %>
+                       class="mt-1 h-4 w-4 text-purple-600 bg-white border-gray-300 rounded focus:ring-purple-500 focus:ring-2" required />
+                <label for="terms-checkbox" class="text-sm text-gray-600 leading-relaxed">
+                    I agree to the 
+                    <a href="/termsCondition" class="text-purple-600 hover:text-purple-800 underline font-medium transition-colors">terms and conditions</a>
+                </label>
+            </div>
+
+            <!-- Register Button -->
+            <button type="submit" 
+                    class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 px-6 rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 shadow-lg font-semibold text-lg flex items-center justify-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                </svg>
+                Create Account
+            </button>
+
+            <!-- Login Link -->
+            <div class="text-center pt-4">
+                <p class="text-gray-600">
+                    Already have an account? 
+                    <a href="/login" class="text-purple-600 hover:text-purple-800 underline font-medium transition-colors">Sign In</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Enhanced Animation JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Password toggle functionality for register password
+        const toggleRegisterPassword = document.getElementById('toggleRegisterPassword');
+        const registerPasswordInput = document.getElementById('registerPassword');
+        const eyeOpenRegister = document.getElementById('eyeOpenRegister');
+        const eyeClosedRegister = document.getElementById('eyeClosedRegister');
+
+        if (toggleRegisterPassword && registerPasswordInput) {
+            toggleRegisterPassword.addEventListener('click', function() {
+                const type = registerPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                registerPasswordInput.setAttribute('type', type);
+                
+                // Toggle eye icons
+                if (type === 'text') {
+                    eyeOpenRegister.classList.add('hidden');
+                    eyeClosedRegister.classList.remove('hidden');
+                } else {
+                    eyeOpenRegister.classList.remove('hidden');
+                    eyeClosedRegister.classList.add('hidden');
+                }
+            });
+        }
+
+        // Password toggle functionality for confirm password
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const eyeOpenConfirm = document.getElementById('eyeOpenConfirm');
+        const eyeClosedConfirm = document.getElementById('eyeClosedConfirm');
+
+        if (toggleConfirmPassword && confirmPasswordInput) {
+            toggleConfirmPassword.addEventListener('click', function() {
+                const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                confirmPasswordInput.setAttribute('type', type);
+                
+                // Toggle eye icons
+                if (type === 'text') {
+                    eyeOpenConfirm.classList.add('hidden');
+                    eyeClosedConfirm.classList.remove('hidden');
+                } else {
+                    eyeOpenConfirm.classList.remove('hidden');
+                    eyeClosedConfirm.classList.add('hidden');
+                }
+            });
+        }
+
+        // Add entrance animations
+        const formElements = document.querySelectorAll('.bg-white, .w-20');
+        formElements.forEach((element, index) => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(30px)';
+            element.style.transition = 'all 0.6s ease-out';
+            element.style.transitionDelay = `${index * 0.2}s`;
+            
+            setTimeout(() => {
+                element.style.opacity = '1';
+                element.style.transform = 'translateY(0)';
+            }, 100);
+        });
+
+        // Focus enhancement for inputs
+        const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"]');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('ring-2', 'ring-purple-200');
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('ring-2', 'ring-purple-200');
+            });
+        });
+
+        // Password confirmation validation
+        const password = document.querySelector('input[name="password"]');
+        const confirmPassword = document.querySelector('input[name="confirmPassword"]');
+        
+        function validatePasswords() {
+            if (password.value !== confirmPassword.value && confirmPassword.value.length > 0) {
+                confirmPassword.classList.add('border-red-300', 'bg-red-50');
+                confirmPassword.classList.remove('border-gray-300', 'bg-gray-50');
+            } else {
+                confirmPassword.classList.remove('border-red-300', 'bg-red-50');
+                confirmPassword.classList.add('border-gray-300', 'bg-gray-50');
+            }
+        }
+
+        password.addEventListener('input', validatePasswords);
+        confirmPassword.addEventListener('input', validatePasswords);
+    });
+</script>
+
+<%- include('partials/footer') %>

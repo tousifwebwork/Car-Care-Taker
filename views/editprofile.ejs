@@ -1,0 +1,124 @@
+<%- include('partials/header') %>
+<%- include('partials/nav') %>
+
+<div class="bg-gradient-to-br from-indigo-100 via-white to-indigo-50 min-h-screen flex items-center justify-center py-12 px-4">
+  <div class="max-w-3xl w-full bg-white shadow-2xl rounded-3xl p-10">
+    <h1 class="text-3xl font-bold text-gray-900 mb-8 text-center">Edit Profile</h1>
+
+    <form action="/editprofile" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      
+      <!-- Profile Image -->
+      <div class="sm:col-span-2 text-center">
+        <% if (logininfo.image) { %>
+          <img id="profileImg" src="<%= logininfo.image %>" alt="Profile Image" class="w-32 h-32 mx-auto rounded-full object-cover mb-4 border-2 border-indigo-400">
+        <% } else { %>
+          <div id="profilePlaceholder" class="w-32 h-32 mx-auto rounded-full bg-gray-200 mb-4 flex items-center justify-center text-gray-500 text-xl border-2 border-indigo-400">
+            No Image
+          </div>
+        <% } %>
+
+        <!-- Hidden input to tell server to remove image -->
+        <input type="hidden" name="removeImage" id="removeImage" value="0">
+
+        <!-- Upload new image -->
+        <label class="cursor-pointer w-56 bg-blue-200 text-gray-700 hover:bg-blue-400 font-semibold py-2 px-6 rounded-2xl block mx-auto text-center transition-all transform hover:scale-105 mt-2">
+          Choose File
+          <input type="file" name="profileImage" accept="image/*" class="hidden" id="profileFile">
+        </label>
+
+        <!-- Remove image -->
+        <label id="removepic" class="cursor-pointer w-56 bg-red-200 text-gray-700 hover:bg-red-400 font-semibold py-2 px-6 rounded-2xl block mx-auto text-center transition-all transform hover:scale-105 mt-2">
+          Remove Profile Pic
+        </label>
+      </div>
+
+      <!-- Name -->
+      <div class="sm:col-span-2">
+        <label class="block text-gray-700 font-medium mb-2">Full Name</label>
+        <input type="text" name="fullName" value="<%= logininfo.fullName || '' %>" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Enter your full name" />
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label class="block text-gray-700 font-medium mb-2">Email</label>
+        <input type="email" name="email" value="<%= logininfo.email || '' %>" class="w-full p-3 border border-gray-300 rounded-lg" />
+      </div>
+
+      <!-- Gender -->
+      <div>
+        <label class="block text-gray-700 font-medium mb-2">Gender</label>
+        <select name="gender" class="w-full p-3 border border-gray-300 rounded-lg">
+          <option value="Male" <%= logininfo.gender === 'Male' ? 'selected' : '' %>>Male</option>
+          <option value="Female" <%= logininfo.gender === 'Female' ? 'selected' : '' %>>Female</option>
+          <option value="Other" <%= logininfo.gender === 'Other' ? 'selected' : '' %>>Other</option>
+        </select>
+      </div>
+
+      <!-- Address -->
+      <div class="sm:col-span-2">
+        <label class="block text-gray-700 font-medium mb-2">Address</label>
+        <input type="text" name="address" value="<%= logininfo.address || '' %>" class="w-full p-3 border border-gray-300 rounded-lg" />
+      </div>
+
+      <!-- DOB -->
+      <div class="sm:col-span-2">
+        <label class="block text-gray-700 font-medium mb-2">Date of Birth</label>
+        <input type="date" name="dob" value="<%= logininfo.dob ? logininfo.dob.toISOString().split('T')[0] : '' %>" class="w-full p-3 border border-gray-300 rounded-lg" />
+      </div>
+
+      <!-- Buttons -->
+      <div class="sm:col-span-2 text-center mt-6 flex justify-center gap-4">
+        <button type="submit" class="px-8 py-3 bg-indigo-600 text-white font-semibold rounded-full hover:bg-indigo-700">
+          Save Changes
+        </button>
+        <a href="/profile" class="px-8 py-3 bg-gray-200 text-gray-900 font-semibold rounded-full hover:bg-gray-300">
+          Profile
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const removepic = document.getElementById('removepic');
+  const removeInput = document.getElementById('removeImage');
+  const profileImg = document.getElementById('profileImg');
+
+  removepic.addEventListener('click', () => {
+    if (profileImg) {
+      const placeholder = document.createElement('div');
+      placeholder.className = "w-32 h-32 mx-auto rounded-full bg-gray-200 mb-4 flex items-center justify-center text-gray-500 text-xl border-2 border-indigo-400";
+      placeholder.innerText = "No Image";
+
+      profileImg.parentNode.replaceChild(placeholder, profileImg);
+
+      removeInput.value = "1"; // tell server to remove image
+    }
+  });
+
+  // Optional: preview new uploaded image before submit
+  const profileFile = document.getElementById('profileFile');
+  profileFile.addEventListener('change', function(){
+    if(this.files && this.files[0]){
+      const reader = new FileReader();
+      reader.onload = function(e){
+        let imgEl = document.getElementById('profileImg');
+        if(!imgEl){
+          // remove placeholder if exists
+          const placeholder = document.getElementById('profilePlaceholder');
+          if(placeholder) placeholder.remove();
+          // create new img element
+          imgEl = document.createElement('img');
+          imgEl.id = "profileImg";
+          imgEl.className = "w-32 h-32 mx-auto rounded-full object-cover mb-4 border-2 border-indigo-400";
+          profileFile.parentNode.parentNode.insertBefore(imgEl, profileFile.parentNode);
+        }
+        imgEl.src = e.target.result;
+      }
+      reader.readAsDataURL(this.files[0]);
+      removeInput.value = "0"; // reset remove flag
+    }
+  });
+</script>
+
+<%- include('partials/footer') %>

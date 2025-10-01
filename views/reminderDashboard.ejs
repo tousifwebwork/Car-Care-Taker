@@ -1,0 +1,321 @@
+<%- include('partials/header') %>
+<%- include('partials/nav',{ activePage: 'reminderDashboard', isLoggedIn: isLoggedIn }) %>
+
+<div class="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-indigo-50 py-8 px-4 pt-20">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header Section with Enhanced Design -->
+        <div class="bg-white shadow-2xl rounded-3xl p-8 mb-8">
+            <div class="text-center mb-8">
+                <div class="w-24 h-24 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
+                    <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">Email Reminder Dashboard</h1>
+                <p class="text-gray-600 text-lg">Automated notification system for vehicle documentation</p>
+            </div>
+
+            <!-- Service Status Card -->
+            <div class="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-2xl p-8">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-2xl font-semibold text-gray-800 mb-2">Reminder Service Status</h2>
+                        <p class="text-gray-600">Automated email reminders for policy and PUC expirations</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="flex items-center justify-end mb-2">
+                            <div class="w-4 h-4 rounded-full <%= isServiceRunning ? 'bg-green-500' : 'bg-red-500' %> mr-3 animate-pulse"></div>
+                            <span class="font-bold text-lg <%= isServiceRunning ? 'text-green-600' : 'text-red-600' %>">
+                                <%= isServiceRunning ? 'RUNNING' : 'STOPPED' %>
+                            </span>
+                        </div>
+                        <p class="text-sm text-gray-500">Daily at 9:00 AM IST</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Statistics Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+                <div class="flex items-center">
+                    <div class="p-4 rounded-full bg-blue-100 text-blue-600">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600 font-medium">Today's Emails</p>
+                        <p class="text-3xl font-bold text-gray-900" id="todayCount">
+                            <%= stats.today.reduce((sum, stat) => sum + stat.count, 0) %>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+                <div class="flex items-center">
+                    <div class="p-4 rounded-full bg-green-100 text-green-600">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600 font-medium">Sent Successfully</p>
+                        <p class="text-3xl font-bold text-gray-900" id="sentCount">
+                            <%= stats.total.filter(s => s._id.status === 'sent').reduce((sum, stat) => sum + stat.count, 0) %>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+                <div class="flex items-center">
+                    <div class="p-4 rounded-full bg-red-100 text-red-600">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600 font-medium">Failed</p>
+                        <p class="text-3xl font-bold text-gray-900" id="failedCount">
+                            <%= stats.total.filter(s => s._id.status === 'failed').reduce((sum, stat) => sum + stat.count, 0) %>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+                <div class="flex items-center">
+                    <div class="p-4 rounded-full bg-yellow-100 text-yellow-600">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600 font-medium">Upcoming Exp.</p>
+                        <p class="text-3xl font-bold text-gray-900">
+                            <%= upcomingExpirations.length %>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Expirations -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Upcoming Expirations (Next 30 Days)</h3>
+            <% if (upcomingExpirations.length > 0) { %>
+                <div class="overflow-x-auto">
+                    <table class="w-full table-auto">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Car Number</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Owner</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Insurance Expiry</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">PUC Expiry</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% upcomingExpirations.forEach(car => { %>
+                                <tr class="border-t">
+                                    <td class="px-4 py-2 text-sm text-gray-900"><%= car.car_no %></td>
+                                    <td class="px-4 py-2 text-sm text-gray-900"><%= car.Username %></td>
+                                    <td class="px-4 py-2 text-sm">
+                                        <% if (car.nextInsurance) { 
+                                            const insuranceDays = Math.ceil((new Date(car.nextInsurance) - new Date()) / (1000 * 60 * 60 * 24));
+                                        %>
+                                            <span class="<%= insuranceDays <= 3 ? 'text-red-600 font-semibold' : insuranceDays <= 7 ? 'text-yellow-600' : 'text-gray-600' %>">
+                                                <%= new Date(car.nextInsurance).toLocaleDateString() %>
+                                                (<%= insuranceDays <= 0 ? 'Expired' : insuranceDays + ' days' %>)
+                                            </span>
+                                        <% } else { %>
+                                            <span class="text-gray-400">N/A</span>
+                                        <% } %>
+                                    </td>
+                                    <td class="px-4 py-2 text-sm">
+                                        <% if (car.nextPUC) { 
+                                            const pucDays = Math.ceil((new Date(car.nextPUC) - new Date()) / (1000 * 60 * 60 * 24));
+                                        %>
+                                            <span class="<%= pucDays <= 3 ? 'text-red-600 font-semibold' : pucDays <= 7 ? 'text-yellow-600' : 'text-gray-600' %>">
+                                                <%= new Date(car.nextPUC).toLocaleDateString() %>
+                                                (<%= pucDays <= 0 ? 'Expired' : pucDays + ' days' %>)
+                                            </span>
+                                        <% } else { %>
+                                            <span class="text-gray-400">N/A</span>
+                                        <% } %>
+                                    </td>
+                                    <td class="px-4 py-2">
+                                        <% 
+                                            const today = new Date();
+                                            const insuranceStatus = car.nextInsurance ? Math.ceil((new Date(car.nextInsurance) - today) / (1000 * 60 * 60 * 24)) : null;
+                                            const pucStatus = car.nextPUC ? Math.ceil((new Date(car.nextPUC) - today) / (1000 * 60 * 60 * 24)) : null;
+                                            const urgent = (insuranceStatus !== null && insuranceStatus <= 3) || (pucStatus !== null && pucStatus <= 3);
+                                        %>
+                                        <span class="px-2 py-1 text-xs rounded-full <%= urgent ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800' %>">
+                                            <%= urgent ? 'Urgent' : 'Upcoming' %>
+                                        </span>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <p class="text-gray-500 text-center py-8">No upcoming expirations in the next 30 days.</p>
+            <% } %>
+        </div>
+
+        <!-- Recent Email Logs -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Recent Email Logs</h3>
+            <% if (recentLogs.length > 0) { %>
+                <div class="overflow-x-auto">
+                    <table class="w-full table-auto">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Date & Time</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Car</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Type</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Days Before</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Email</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% recentLogs.forEach(log => { %>
+                                <tr class="border-t">
+                                    <td class="px-4 py-2 text-sm text-gray-900">
+                                        <%= new Date(log.sentAt).toLocaleString() %>
+                                    </td>
+                                    <td class="px-4 py-2 text-sm text-gray-900">
+                                        <%= log.carId ? log.carId.car_no : 'N/A' %>
+                                    </td>
+                                    <td class="px-4 py-2 text-sm">
+                                        <span class="px-2 py-1 text-xs rounded-full <%= log.reminderType === 'insurance' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800' %>">
+                                            <%= log.reminderType === 'insurance' ? 'Insurance' : 'PUC' %>
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-2 text-sm text-gray-900">
+                                        <%= log.daysBeforeExpiry === 0 ? 'Today' : log.daysBeforeExpiry + ' days' %>
+                                    </td>
+                                    <td class="px-4 py-2 text-sm text-gray-600">
+                                        <%= log.email %>
+                                    </td>
+                                    <td class="px-4 py-2">
+                                        <span class="px-2 py-1 text-xs rounded-full <%= log.status === 'sent' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
+                                            <%= log.status %>
+                                        </span>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <p class="text-gray-500 text-center py-8">No email logs found for your cars.</p>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Modal -->
+<div id="loadingModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <p class="text-gray-600">Processing...</p>
+    </div>
+</div>
+
+<script>
+function showLoading() {
+    document.getElementById('loadingModal').classList.remove('hidden');
+    document.getElementById('loadingModal').classList.add('flex');
+}
+
+function hideLoading() {
+    document.getElementById('loadingModal').classList.add('hidden');
+    document.getElementById('loadingModal').classList.remove('flex');
+}
+
+function showNotification(message, type = 'success') {
+    const notification = document.createElement('div');
+    notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white z-50 ${
+        type === 'success' ? 'bg-green-600' : 'bg-red-600'
+    }`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+// Enhanced Smooth scrolling and animation functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Create and style scroll-to-top button
+    let scrollToTopBtn = document.createElement('button');
+    scrollToTopBtn.innerHTML = '↑';
+    scrollToTopBtn.className = 'scroll-to-top';
+    scrollToTopBtn.setAttribute('aria-label', 'Scroll to top');
+    scrollToTopBtn.onclick = () => {
+        window.scrollTo({ 
+            top: 0, 
+            behavior: 'smooth' 
+        });
+    };
+    document.body.appendChild(scrollToTopBtn);
+
+    // Show/hide scroll to top button based on scroll position
+    function toggleScrollButton() {
+        if (window.pageYOffset > 200) {
+            scrollToTopBtn.classList.add('visible');
+        } else {
+            scrollToTopBtn.classList.remove('visible');
+        }
+    }
+
+    // Throttled scroll listener for better performance
+    let scrollTimeout;
+    window.addEventListener('scroll', function() {
+        if (scrollTimeout) {
+            clearTimeout(scrollTimeout);
+        }
+        scrollTimeout = setTimeout(() => {
+            toggleScrollButton();
+        }, 10);
+    });
+    
+    // Initial check
+    toggleScrollButton();
+
+    // Add smooth scrolling to all anchor links on the page
+    const allAnchorLinks = document.querySelectorAll('a[href^="#"]');
+    allAnchorLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href === '#' || href === '#top') {
+                e.preventDefault();
+                window.scrollTo({ 
+                    top: 0, 
+                    behavior: 'smooth' 
+                });
+                return;
+            }
+            
+            const targetId = href.substring(1);
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                e.preventDefault();
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+});
+</script>
+
+<%- include('partials/footer') %>

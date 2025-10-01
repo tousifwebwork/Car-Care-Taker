@@ -1,0 +1,350 @@
+<%- include('partials/header') %>
+<%- include('partials/nav',{ activePage: activePage, isLoggedIn: isLoggedIn }) %>
+
+<div id="main-container" class="scroll-container">
+    <!-- Profile Section -->
+    <section id="profile" class="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-indigo-50 flex justify-center py-6 px-4 sm:py-12 sm:px-6">
+        <div class="w-full max-w-4xl bg-white shadow-2xl rounded-3xl p-6 sm:p-8">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Your Profile</h2>
+                <p class="text-gray-600">Welcome to your car management dashboard</p>
+            </div>
+
+            <!-- Profile Header -->
+            <div class="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6 border-b pb-4 sm:pb-6 mb-4 sm:mb-6">
+                <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border-4 border-indigo-500 shadow-md flex items-center justify-center bg-gray-200">
+                    <% if (logininfo && logininfo.image) { %>
+                        <img src="<%= logininfo.image %>" class="w-full h-full object-cover" />
+                    <% } else { %>
+                        <span class="text-gray-500 font-semibold text-xs sm:text-sm">No Profile</span>
+                    <% } %>
+                </div>
+
+                <div class="flex-1 text-center sm:text-left">
+                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">
+                        <%= (logininfo && logininfo.fullName) ? logininfo.fullName : 'User' %>
+                    </h1>
+                    <% if (logininfo && logininfo.username) { %>
+                        <p class="text-gray-500 mt-1 text-sm sm:text-base">@<%= logininfo.username %></p>
+                    <% } %>
+                    <% if (logininfo && logininfo.email) { %>
+                        <div class="flex items-center justify-center sm:justify-start mt-2">
+                            <svg class="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
+                            </svg>
+                            <p class="text-blue-600 font-medium text-sm sm:text-base"><%= logininfo.email %></p>
+                        </div>
+                    <% } else { %>
+                        <div class="flex items-center justify-center sm:justify-start mt-2">
+                            <svg class="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
+                            </svg>
+                            <p class="text-gray-400 text-sm sm:text-base">No email provided</p>
+                        </div>
+                    <% } %>
+                </div>
+
+            
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
+                <div class="bg-indigo-50 p-4 sm:p-5 rounded-2xl text-center shadow-sm">
+                    <p class="text-gray-500 text-xs sm:text-sm uppercase tracking-wide">Cars Registered</p>
+                    <p class="font-semibold text-xl sm:text-2xl text-gray-900">
+                        <%= (carinfo && carinfo.length) ? carinfo.length : '0' %>
+                    </p>
+                </div>
+                <div class="bg-green-50 p-4 sm:p-5 rounded-2xl text-center shadow-sm">
+                    <p class="text-gray-500 text-xs sm:text-sm uppercase tracking-wide">Member Since</p>
+                    <p class="font-semibold text-base sm:text-lg text-gray-900">
+                        <%= (logininfo && logininfo.createdAt) ? new Date(logininfo.createdAt).toLocaleDateString() : 'N/A' %>
+                    </p>
+                </div>
+                <div class="bg-blue-50 p-4 sm:p-5 rounded-2xl text-center shadow-sm">
+                    <p class="text-gray-500 text-xs sm:text-sm uppercase tracking-wide">Active Policies</p>
+                    <p class="font-semibold text-xl sm:text-2xl text-gray-900">
+                        <%= (carinfo && carinfo.filter(c => c.nextInsurance && new Date(c.nextInsurance) > new Date()).length) || '0' %>
+                    </p>
+                </div>
+                <div class="bg-purple-50 p-4 sm:p-5 rounded-2xl text-center shadow-sm">
+                    <p class="text-gray-500 text-xs sm:text-sm uppercase tracking-wide">Email Status</p>
+                    <p class="font-semibold text-sm text-gray-900 break-all">
+                        <%= (logininfo && logininfo.email) ? '✓ Verified' : '✗ Not Set' %>
+                    </p>
+                    <% if (logininfo && logininfo.email) { %>
+                        <p class="text-xs text-gray-600 mt-1 truncate"><%= logininfo.email %></p>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Scroll hint -->
+            <div class="text-center mt-8">
+                <p class="text-gray-500 text-sm">Scroll down to explore more sections</p>
+                <div class="animate-bounce mt-2">
+                    <svg class="mx-auto h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Me Section -->
+    <section id="about" class="min-h-screen bg-gradient-to-br from-purple-100 via-white to-purple-50 flex flex-col items-center justify-center p-6">
+        <div class="max-w-2xl w-full bg-white shadow-lg rounded-2xl p-6 mx-4 sm:mx-0">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">About Me</h2>
+                <p class="text-gray-600">Learn more about the developer</p>
+            </div>
+
+            <div class="mb-6">
+                <p class="text-lg text-gray-700 leading-relaxed mb-4">
+                    Hello! My name is <strong>Mohammad Tousif Sunkat</strong>.  
+                    I am currently in my 3rd year of IT Engineering. I'm passionate about coding and technology, and I love working on real-time projects that combine creativity with logic.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Skills</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-blue-50 p-3 rounded-lg">
+                        <span class="text-blue-700 font-semibold">Frontend</span>
+                        <p class="text-sm text-gray-600">HTML, CSS, JavaScript</p>
+                    </div>
+                    <div class="bg-green-50 p-3 rounded-lg">
+                        <span class="text-green-700 font-semibold">Backend</span>
+                        <p class="text-sm text-gray-600">Node.js, Express</p>
+                    </div>
+                    <div class="bg-purple-50 p-3 rounded-lg">
+                        <span class="text-purple-700 font-semibold">Database</span>
+                        <p class="text-sm text-gray-600">MySQL, MongoDB</p>
+                    </div>
+                    <div class="bg-yellow-50 p-3 rounded-lg">
+                        <span class="text-yellow-700 font-semibold">Programming</span>
+                        <p class="text-sm text-gray-600">C++, Java</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cars Dashboard Section -->
+    <section id="cars" class="min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-50 flex flex-col items-center px-4 py-6 sm:px-6 lg:px-8">
+        <div class="w-full max-w-7xl">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Your Cars</h2>
+                <p class="text-gray-600 mb-6">Manage your vehicle information and track important dates</p>
+                
+                <a href="/add" class="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700 transition duration-200">
+                    Add New Car
+                </a>
+            </div>
+
+            <!-- Cars Grid -->
+            <div class="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                <% if (carinfo && carinfo.length > 0) { %>
+                    <% carinfo.forEach(car => { %>
+                        <div class="relative bg-white p-4 sm:p-5 rounded-xl shadow-md hover:shadow-xl transform transition duration-300 hover:scale-105">
+                            <h3 class="text-xl font-bold text-gray-700 mb-2"><%= car.Username %></h3>
+                            <p class="text-gray-600 text-sm"><strong>Engine No:</strong> <%= car.car_no %></p>
+                            <p class="text-gray-600 text-sm"><strong>Next PUC:</strong> <%= car.nextPUC ? car.nextPUC.toISOString().split('T')[0] : 'N/A' %></p>
+                            <p class="text-gray-600 text-sm"><strong>Next Insurance:</strong> <%= car.nextInsurance ? car.nextInsurance.toISOString().split('T')[0] : 'N/A' %></p>
+                            
+                            <div class="mt-4 flex gap-2">
+                                <a href="/detail/<%= car._id %>" class="text-blue-500 hover:text-blue-700 font-semibold text-sm">Details</a>
+                                <button onclick="deleteCar('<%= car._id %>', '<%= car.Username %>')" class="text-red-500 hover:text-red-700 font-semibold text-sm">Delete</button>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="col-span-full text-center text-gray-500 font-medium text-lg">
+                        No cars added yet. <a href="/add" class="text-blue-600 hover:underline">Add your first car!</a>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact/Project Section -->
+    <section id="contact" class="min-h-screen bg-gradient-to-br from-green-100 via-white to-green-50 flex flex-col items-center justify-center p-6">
+        <div class="max-w-2xl w-full bg-white shadow-lg rounded-2xl p-6 mx-4 sm:mx-0">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">My Project</h2>
+                <p class="text-gray-600">About this Car Management System</p>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">🚗 Car Management System</h3>
+                    <p class="text-gray-700 mb-4">
+                        A comprehensive web application for managing car insurance and PUC (Pollution Under Control) certificates with automated email reminders.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <h4 class="font-semibold text-gray-800 mb-2">Features:</h4>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Car registration and management</li>
+                                <li>• Insurance tracking</li>
+                                <li>• PUC certificate monitoring</li>
+                                <li>• Automated email reminders</li>
+                                <li>• User profile management</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800 mb-2">Technology Stack:</h4>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Node.js & Express.js</li>
+                                <li>• MongoDB & Mongoose</li>
+                                <li>• EJS Templating</li>
+                                <li>• TailwindCSS</li>
+                                <li>• NodeMailer & Cron Jobs</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Enhanced Smooth Scrolling JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Create and style scroll-to-top button
+    let scrollToTopBtn = document.createElement('button');
+    scrollToTopBtn.innerHTML = '↑';
+    scrollToTopBtn.className = 'scroll-to-top';
+    scrollToTopBtn.setAttribute('aria-label', 'Scroll to top');
+    scrollToTopBtn.onclick = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+    document.body.appendChild(scrollToTopBtn);
+
+    // Create navigation dots
+    const sections = ['profile', 'about', 'cars', 'contact'];
+    const navDots = document.createElement('div');
+    navDots.className = 'page-indicator';
+    sections.forEach((section, index) => {
+        const dot = document.createElement('button');
+        dot.className = `page-dot ${index === 0 ? 'active' : ''}`;
+        dot.setAttribute('data-target', section);
+        dot.setAttribute('title', section.charAt(0).toUpperCase() + section.slice(1));
+        dot.onclick = () => {
+            const targetElement = document.getElementById(section);
+            if (targetElement) {
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        };
+        navDots.appendChild(dot);
+    });
+    document.body.appendChild(navDots);
+
+    // Update active dot based on scroll position
+    function updateActiveDot() {
+        const scrollPosition = window.scrollY + 100;
+        const sectionElements = sections.map(id => document.getElementById(id));
+        const dots = navDots.querySelectorAll('.page-dot');
+        
+        sectionElements.forEach((section, index) => {
+            if (section) {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    dots.forEach(dot => dot.classList.remove('active'));
+                    if (dots[index]) {
+                        dots[index].classList.add('active');
+                    }
+                }
+            }
+        });
+    }
+
+    // Show/hide scroll to top button
+    function toggleScrollButton() {
+        if (window.pageYOffset > 300) {
+            scrollToTopBtn.classList.add('visible');
+        } else {
+            scrollToTopBtn.classList.remove('visible');
+        }
+    }
+
+    // Throttled scroll listener for better performance
+    let scrollTimeout;
+    window.addEventListener('scroll', function() {
+        if (scrollTimeout) {
+            clearTimeout(scrollTimeout);
+        }
+        scrollTimeout = setTimeout(() => {
+            updateActiveDot();
+            toggleScrollButton();
+        }, 10);
+    });
+
+    // Handle navigation links for smooth scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+            if (href === '#' || href === '#top') {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+            
+            const target = document.querySelector(href);
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+
+    // Initial setup
+    updateActiveDot();
+    toggleScrollButton();
+
+    // Add intersection observer for better section detection
+    const observerOptions = {
+        threshold: 0.3,
+        rootMargin: '0px 0px -20% 0px'
+    };
+
+    const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('section-animate');
+            }
+        });
+    }, observerOptions);
+
+    // Observe all sections for animations
+    sections.forEach(sectionId => {
+        const section = document.getElementById(sectionId);
+        if (section) {
+            sectionObserver.observe(section);
+        }
+    });
+});
+
+// Delete car function
+async function deleteCar(carId, carName) {
+    if (confirm(`Do you want to delete ${carName}?`)) {
+        try {
+            const res = await fetch(`/main/delete/${carId}`, { method: 'DELETE' });
+            if (res.ok) {
+                location.reload();
+            } else {
+                alert('Failed to delete car');
+            }
+        } catch(err) {
+            console.error(err);
+            alert('Error deleting car');
+        }
+    }
+}
+</script>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,35 @@
+{
+  "name": "car-management-system",
+  "version": "2.0.0",
+  "description": "A comprehensive car insurance and PUC reminder system with email notifications",
+  "license": "ISC",
+  "author": "Car Management Team",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "dev:css": "concurrently \"nodemon app.js\" \"npx tailwindcss -i ./src/input.css -o ./public/output.css --watch\"",
+    "build:css": "npx tailwindcss -i ./src/input.css -o ./public/output.css --minify",
+    "build": "npm run build:css",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.13",
+    "bcrypt": "^6.0.0",
+    "connect-mongodb-session": "^5.0.0",
+    "dotenv": "^17.2.3",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "express-validator": "^7.2.1",
+    "mongoose": "^8.18.0",
+    "multer": "^2.0.2",
+    "node-cron": "^4.2.1",
+    "nodemailer": "^7.0.6"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "tailwindcss": "^4.1.13"
+  }
+}
