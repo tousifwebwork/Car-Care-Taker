@@ -7,7 +7,7 @@
   "type": "commonjs",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "nodemon app.js",
     "dev": "nodemon app.js",
     "dev:css": "concurrently \"nodemon app.js\" \"npx tailwindcss -i ./src/input.css -o ./public/output.css --watch\"",
     "build:css": "npx tailwindcss -i ./src/input.css -o ./public/output.css --minify",

@@ -2,7 +2,7 @@ const carinfo = require("../models/carinfo");
 const multer = require("multer");
 const path = require("path");
 
-// ---------------- Multer Setup for Car Images ----------------
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "public/uploads/");
@@ -23,13 +23,12 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  limits: { fileSize: 5 * 1024 * 1024 }, 
 });
 
-// Export middleware
+
 exports.uploadCarImage = upload.single("carImage");
 
-// ---------------- GET Edit Car Page ----------------
 exports.getEditCar = async (req, res) => {
   try {
     if (!req.session.user) return res.redirect("/login");

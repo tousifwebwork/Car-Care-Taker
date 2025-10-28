@@ -18,9 +18,9 @@ exports.loginValidation = [
 ];
 
 exports.getLogin = (req, res) => {
-  // Check for success message from password reset
+
   const successMessage = req.session.successMessage;
-  req.session.successMessage = null; // Clear the message after reading
+  req.session.successMessage = null; 
 
   res.render("login", {
     pageTitle: "Login",

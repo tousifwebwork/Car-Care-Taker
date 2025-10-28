@@ -20,7 +20,6 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 
-// Export middleware
 exports.uploadProfileImage = upload.single("profileImage");
 
 // ---------------- GET Edit Profile ----------------

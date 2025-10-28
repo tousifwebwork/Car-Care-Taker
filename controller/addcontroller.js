@@ -11,11 +11,15 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 exports.upload = upload.single("image");
 
+
+
 // GET Add Car page
 exports.addget = async (req, res) => {
   if (!req.session.user) return res.redirect("/login");
   res.render("add", { activePage: "add", pageTitle: "Add Car" });
 };
+
+
 
 // POST Add Car
 exports.addpost = async (req, res) => {

@@ -1,22 +1,15 @@
-/**
- * Car Management System
- * A comprehensive vehicle insurance and PUC reminder application
- * Author: Mohammad Tousif
- */
 
 require("dotenv").config();
-
-// Core Dependencies
 const express = require("express");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const bodyParser = require("body-parser");
 const MongoDBStore = require("connect-mongodb-session")(session);
 
-// Configuration
-const DB_PATH = process.env.MONGODB_URI;
 
-// Route Imports
+const DB_PATH = process.env.MONGODB_URI;
+const PORT = process.env.PORT;
+
 const addRoutes = require("./routes/addRouter");
 const mainRoutes = require("./routes/mainRouter");
 const detailRoutes = require("./routes/detailRouter");
@@ -30,8 +23,6 @@ const editRoutes = require("./routes/editRoutes");
 const editCarRoutes = require("./routes/editCarRouter");
 const reminderRoutes = require("./routes/reminderRouter");
 const forgotPasswordRoutes = require("./routes/forgotPasswordRouter");
-
-// Services
 const reminderService = require("./services/reminderService");
 
 const app = express();
@@ -65,16 +56,6 @@ mongoose
   .connect(DB_PATH)
   .then(() => {
     console.log("✅ Database connected successfully");
-
-    // Start the email reminder service after database connection
-    setTimeout(() => {
-      try {
-        reminderService.start();
-        console.log("📧 Email reminder service initialized");
-      } catch (error) {
-        console.error("Failed to start reminder service:", error);
-      }
-    }, 2000); // Wait 2 seconds to ensure database is fully connected
   })
   .catch((err) => {
     console.error("Database connection error:", err);
@@ -108,13 +89,7 @@ app.get("/logout", (req, res) => {
   });
 });
 
-const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`🚀 Car Management System Started!`);
   console.log(`🌐 Access at: http://localhost:${PORT}`);
-  console.log(
-    `📧 Email reminders: ${
-      process.env.EMAIL_ENABLED === "true" ? "Enabled" : "Disabled"
-    }`
-  );
 });

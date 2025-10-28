@@ -6,7 +6,7 @@ exports.detailGet = async (req, res) => {
     if (!req.session.user) return res.redirect("/login");
 
     const carId = req.params.id;
-    const userId = req.session.user._id; // <- use _id
+    const userId = req.session.user._id; 
 
     const car = await carinfo.findOne({ _id: carId, userId });
 
